@@ -5,7 +5,7 @@ sc_icounterSet (int value)
 {
   if (value < 0 || value > 32767)
     {
-      printf("INVALID COUNTER VALUE\n");
+      printf ("INVALID COUNTER VALUE\n");
       return -1;
     }
 
