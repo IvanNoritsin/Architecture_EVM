@@ -14,7 +14,7 @@ sc_memoryLoad (char *filename)
       return -1;
     }
 
-  fread (memory, 128, sizeof (memory), filename);
-  fclose (filename);
+  fread (memory, sizeof (int), 128, readFIle);
+  fclose (readFIle);
   return 0;
 }

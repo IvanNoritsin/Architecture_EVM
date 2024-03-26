@@ -14,7 +14,7 @@ sc_memorySave (char *filename)
       return -1;
     }
 
-  fwrite (memory, 128, sizeof (memory), writeFile);
-  fclose (filename);
+  fwrite (memory, sizeof (int), 128, writeFile);
+  fclose (writeFile);
   return 0;
 }
