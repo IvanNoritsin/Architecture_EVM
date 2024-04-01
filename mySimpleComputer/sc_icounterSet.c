@@ -3,9 +3,8 @@
 int
 sc_icounterSet (int value)
 {
-  if (value < 0 || value > 32767)
+  if (value < 0 || value > 127)
     {
-      printf ("INVALID COUNTER VALUE\n");
       return -1;
     }
 

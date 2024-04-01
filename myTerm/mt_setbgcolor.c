@@ -1,4 +1,4 @@
-#include <myTerm.h>
+#include "myTerm.h"
 
 int
 mt_setbgcolor (enum colors color)

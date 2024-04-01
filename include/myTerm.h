@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
 
 #define TERM "/dev/tty"
 
@@ -28,5 +29,6 @@ int mt_setbgcolor (enum colors color);
 int mt_setdefaultcolor ();
 int mt_setcursorvisible (int value);
 int mt_delline ();
+int mt_printText (char *text);
 
 #endif

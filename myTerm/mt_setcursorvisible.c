@@ -1,4 +1,4 @@
-#include <myTerm.h>
+#include "myTerm.h"
 
 int
 mt_setcursorvisible (int value)
@@ -23,7 +23,8 @@ mt_setcursorvisible (int value)
       return 0;
     }
 
-    else {
-        return -1;
+  else
+    {
+      return -1;
     }
 }

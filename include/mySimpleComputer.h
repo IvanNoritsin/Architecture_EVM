@@ -1,6 +1,7 @@
 #ifndef MY_SIMPLE_COMPUTER_H
 #define MY_SIMPLE_COMPUTER_H
 
+#include "myTerm.h"
 #include <stdio.h>
 
 #define OVERFLOW 0
@@ -31,10 +32,12 @@ int sc_icounterGet (int *value);
 int sc_commandEncode (int sign, int command, int operand, int *value);
 int sc_commandDecode (int value, int *sign, int *command, int *operand);
 int sc_commandValidate (int command);
-void printCell (int address);
+void printCell (int address, enum colors fg, enum colors bg);
 void printFlags ();
 void printDecodedCommand (int value);
 void printAccumulator ();
 void printCounters ();
+void printCommand ();
+void printTerm (int address, int input);
 
 #endif
