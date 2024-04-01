@@ -17,4 +17,6 @@ sc_regGet (int registr, int *value)
     {
       *value = 0;
     }
+
+  return 0;
 }

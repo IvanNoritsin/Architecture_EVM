@@ -6,7 +6,6 @@ printTerm (int address, int input)
   int sign, command, operand;
   int memory_get;
   char buf[50];
-  char text[50];
 
   mt_gotoXY (19, 68);
   mt_setfgcolor (GREEN);

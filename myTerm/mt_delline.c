@@ -11,4 +11,6 @@ mt_delline (void)
 
   write (terminal, "\E[M", sizeof ("\E[M"));
   close (terminal);
+
+  return 0;
 }
