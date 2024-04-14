@@ -1,3 +1,4 @@
+#include "myBigChars.h"
 #include "mySimpleComputer.h"
 #include "myTerm.h"
 
@@ -65,7 +66,9 @@ main ()
   printTerm (72, 1);
   printTerm (57, 1);
 
-  mt_gotoXY (27, 1);
+  bc_box (30, 10, 10, 16, WHITE, BLACK, "header", RED, WHITE);
+
+  mt_gotoXY (45, 1);
 
   return 0;
 }
