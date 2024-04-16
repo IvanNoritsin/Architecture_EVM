@@ -8,11 +8,6 @@ printCommand (void)
   int sign, command, operand;
   char buf[50];
 
-  mt_gotoXY (4, 91);
-  mt_setfgcolor (RED);
-  mt_printText ("Команда");
-  mt_setdefaultcolor ();
-
   sc_icounterGet (&icounter_get);
   sc_memoryGet (icounter_get, &memory_get);
   sc_commandDecode (memory_get, &sign, &command, &operand);

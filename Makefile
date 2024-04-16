@@ -8,7 +8,7 @@ LIB1=mySimpleComputer
 LIB2=myTerm
 LIB3=myBigChars
 
-all: $(OUTPUT)/main
+all: $(OUTPUT)/main $(OUTPUT)/font 
 
 $(OUTPUT)/main: $(OUTPUT)/main.o $(LIB1)/build/$(LIB1).a $(LIB2)/build/$(LIB2).a $(LIB3)/build/$(LIB3).a
 	$(CC) $(CFLAGS) -o $@ $^
@@ -24,6 +24,12 @@ $(LIB2)/build/$(LIB2).a: $(LIB2)
 
 $(LIB3)/build/$(LIB3).a: $(LIB3)
 	make -f ./$</Makefile
+
+$(OUTPUT)/font: $(OUTPUT)/font.o $(LIB1)/build/$(LIB1).a $(LIB2)/build/$(LIB2).a $(LIB3)/build/$(LIB3).a
+	$(CC) $(CFLAGS) -o $@ $^
+
+$(OUTPUT)/font.o: $(SRC_DIR)/font.c | $(OUTPUT)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OUTPUT):
 	mkdir $@

@@ -11,11 +11,6 @@ printFlags (void)
   char reg4[5];
   char reg5[5];
 
-  mt_gotoXY (1, 88);
-  mt_setfgcolor (RED);
-  mt_printText ("Регистр флагов");
-  mt_setdefaultcolor ();
-
   sc_regGet (0, &value);
   if (value == 0)
     {

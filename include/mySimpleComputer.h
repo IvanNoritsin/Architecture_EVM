@@ -1,6 +1,7 @@
 #ifndef MY_SIMPLE_COMPUTER_H
 #define MY_SIMPLE_COMPUTER_H
 
+#include "myBigChars.h"
 #include "myTerm.h"
 #include <stdio.h>
 
@@ -39,5 +40,6 @@ void printAccumulator ();
 void printCounters ();
 void printCommand ();
 void printTerm (int address, int input);
+void printBigCell (int font_array[][2]);
 
 #endif

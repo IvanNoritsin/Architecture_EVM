@@ -1,12 +1,9 @@
 #include "myBigChars.h"
 
 int
-bc_bigcharwrite (int fd, int *big, int count)
+bc_bigcharwrite (int fd, int big[][2], int count)
 {
-  if (write (fd, big, count * 2 * sizeof (int)))
-    {
-      return -1;
-    }
+  write (fd, big, count * 2 * sizeof (int));
 
   return 0;
 }

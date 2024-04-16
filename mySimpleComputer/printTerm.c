@@ -7,12 +7,6 @@ printTerm (int address, int input)
   int memory_get;
   char buf[50];
 
-  mt_gotoXY (19, 68);
-  mt_setfgcolor (GREEN);
-  mt_setbgcolor (WHITE);
-  mt_printText (" IN--OUT ");
-  mt_setdefaultcolor ();
-
   if (input == 0)
     {
       sprintf (buf, "%d<", address);

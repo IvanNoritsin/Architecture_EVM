@@ -1,15 +1,16 @@
 #include "myBigChars.h"
 
 int
-bc_bigcharread (int fd, int *big, int need_count, int *count)
+bc_bigcharread (int fd, int big[][2], int need_count, int *count)
 {
   *count = 0;
-  for (int i = 0; i < need_count * 2; ++i)
+  for (int i = 0; i < need_count; ++i)
     {
-      if (read (fd, &big[i], sizeof (unsigned int)) == -1)
-        return -1;
-      if (!((i + 1) % 2))
-        (*count)++;
+      for (int j = 0; j < 2; j++)
+        {
+          read (fd, &big[i][j], sizeof (int));
+        }
+      (*count)++;
     }
 
   return 0;

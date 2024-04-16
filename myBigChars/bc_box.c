@@ -38,12 +38,13 @@ bc_box (int x1, int y1, int x2, int y2, enum colors box_fg, enum colors box_bg,
       bc_printA (ACS_HLINE);
     }
   mt_setdefaultcolor ();
+  int len;
 
   if (bc_strlen (header) != 0)
     {
+      len = bc_strlen (header);
       int shift = y1 - 1;
-      int center = (y2 / 2) - 1 + shift;
-      printf ("%d", center);
+      int center = (y2 / 2) - (len / 2) + shift + 2;
       mt_gotoXY (x1, center);
       mt_setfgcolor (header_fg);
       mt_setbgcolor (header_bg);
