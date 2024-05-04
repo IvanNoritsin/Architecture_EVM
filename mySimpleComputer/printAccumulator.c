@@ -11,7 +11,15 @@ printAccumulator (void)
   int sign, command, operand;
   sc_commandDecode (value, &sign, &command, &operand);
 
-  sprintf (buf, "sc: +%02X%02X hex: %X", command, operand, value);
+  if (sign == 0)
+    {
+      sprintf (buf, "sc: +%02X%02X hex: %04X", command, operand, value);
+    }
+  else
+    {
+      sprintf (buf, "sc: -%02X%02X hex: %04X", command, operand, value);
+    }
+
   mt_gotoXY (2, 64);
   mt_printText (buf);
 }

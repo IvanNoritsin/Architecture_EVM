@@ -11,10 +11,13 @@
 #define IMPULS 3
 #define WRONG_COMMAND 4
 
+extern int currentMC;
 extern int memory[128];
 extern int flagsRegister;
 extern int accumulator;
 extern int icounter;
+extern int cursorX;
+extern int cursorY;
 
 int sc_memoryInit ();
 int sc_memorySet (int address, int value);

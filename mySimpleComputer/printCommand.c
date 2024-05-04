@@ -9,6 +9,15 @@ printCommand (void)
   char buf[50];
 
   sc_icounterGet (&icounter_get);
+
+  if (icounter_get > 127)
+    {
+      sprintf (buf, "+ FF : FF   ");
+      mt_gotoXY (5, 90);
+      mt_printText (buf);
+      return;
+    }
+
   sc_memoryGet (icounter_get, &memory_get);
   sc_commandDecode (memory_get, &sign, &command, &operand);
 
@@ -16,7 +25,7 @@ printCommand (void)
     {
       if (sc_commandValidate (command) == 0)
         {
-          sprintf (buf, "+ %02X : %02X", command, operand);
+          sprintf (buf, "+ %02X : %02X   ", command, operand);
         }
       else
         {
@@ -27,7 +36,7 @@ printCommand (void)
     {
       if (sc_commandValidate (command) == 0)
         {
-          sprintf (buf, "- %02X : %02X", command, operand);
+          sprintf (buf, "- %02X : %02X   ", command, operand);
         }
       else
         {

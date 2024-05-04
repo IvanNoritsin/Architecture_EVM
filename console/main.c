@@ -1,6 +1,10 @@
 #include "myBigChars.h"
+#include "myReadKey.h"
 #include "mySimpleComputer.h"
 #include "myTerm.h"
+
+void interface ();
+int keyHandler (enum keys key);
 
 int
 main (int argc, char *argv[])
@@ -60,13 +64,25 @@ main (int argc, char *argv[])
   sc_icounterInit ();
   sc_regInit ();
 
-  sc_memorySet (0, 6589);
-  sc_memorySet (15, 426);
-  sc_memorySet (44, 9862);
-  sc_memorySet (72, 13548);
-  sc_memorySet (94, 56);
-  sc_memorySet (113, 30568);
+  sc_regSet (IMPULS, 1);
+  rk_mytermregime (0, 0, 1, 1, 1);
 
+  enum keys key;
+
+  do
+    {
+      interface (font_array);
+      rk_readkey (&key);
+      keyHandler (key);
+    }
+  while (key != ESC_KEY);
+
+  return 0;
+}
+
+void
+interface (int font_array[][2])
+{
   for (int i = 0; i < 128; i++)
     {
       printCell (i, WHITE, BLACK);
@@ -74,23 +90,15 @@ main (int argc, char *argv[])
 
   bc_box (1, 1, 13, 59, WHITE, BLACK, " Оперативная память ", RED, BLACK);
 
-  sc_accumulatorSet (7861);
   printAccumulator ();
   bc_box (1, 62, 1, 21, WHITE, BLACK, " Аккумулятор ", RED, BLACK);
 
-  sc_regSet (OVERFLOW, 1);
-  sc_regSet (IMPULS, 1);
   printFlags ();
   bc_box (1, 85, 1, 21, WHITE, BLACK, " Регистр флагов ", RED, BLACK);
 
-  sc_icounterSet (72);
-
-  int icounter_get;
   int memory_get;
-
-  sc_icounterGet (&icounter_get);
-  sc_memoryGet (icounter_get, &memory_get);
-
+  sc_memoryGet (currentMC, &memory_get);
+  printCell (currentMC, BLACK, WHITE);
   printDecodedCommand (memory_get);
   bc_box (16, 1, 1, 59, WHITE, BLACK, " Редактируемая ячейка (формат) ", RED,
           WHITE);
@@ -101,23 +109,183 @@ main (int argc, char *argv[])
   printCommand ();
   bc_box (4, 85, 1, 21, WHITE, BLACK, " Команда ", RED, BLACK);
 
-  printTerm (23, 1);
-  printTerm (44, 1);
-  printTerm (15, 1);
-  printTerm (76, 1);
-  printTerm (0, 1);
-  printTerm (72, 1);
-  printTerm (57, 1);
-
-  printBigCell (font_array);
-
-  printBigCell (font_array);
-
   bc_box (7, 62, 10, 44, WHITE, BLACK, " Редактируемая ячейка (увеличено) ",
           RED, WHITE);
-  bc_box (19, 67, 4, 9, WHITE, BLACK, " IN--OUT ", GREEN, WHITE);
+  printBigCell (font_array);
 
-  mt_gotoXY (45, 1);
+  bc_box (19, 66, 5, 9, WHITE, BLACK, " IN--OUT ", GREEN, WHITE);
+
+  bc_box (19, 77, 5, 29, WHITE, BLACK, " Клавиши ", GREEN, WHITE);
+  mt_gotoXY (20, 78);
+  mt_printText ("l - load  s - save  i - reset");
+  mt_gotoXY (21, 78);
+  mt_printText ("r - run   t - step");
+  mt_gotoXY (22, 78);
+  mt_printText ("ESC - выход");
+  mt_gotoXY (23, 78);
+  mt_printText ("F5 - accumulator");
+  mt_gotoXY (24, 78);
+  mt_printText ("F6 - instruction counter");
+
+  mt_gotoXY (27, 1);
+}
+
+int
+keyHandler (enum keys key)
+{
+  switch (key)
+    {
+    case UP_KEY:
+      if (currentMC <= 7)
+        {
+          currentMC = 120 + currentMC;
+        }
+      else if (currentMC == 8 || currentMC == 9)
+        {
+          currentMC = 110 + currentMC;
+        }
+      else
+        {
+          currentMC = currentMC - 10;
+        }
+      break;
+
+    case DOWN_KEY:
+      if (currentMC >= 120)
+        {
+          currentMC = currentMC - 120;
+        }
+      else if (currentMC == 118 || currentMC == 119)
+        {
+          currentMC = currentMC - 110;
+        }
+      else
+        {
+          currentMC = currentMC + 10;
+        }
+      break;
+
+    case LEFT_KEY:
+      if (currentMC % 10 == 0 && currentMC != 120)
+        {
+          currentMC = currentMC + 9;
+        }
+      else if (currentMC == 120)
+        {
+          currentMC = currentMC + 7;
+        }
+      else
+        {
+          currentMC = currentMC - 1;
+        }
+      break;
+
+    case RIGHT_KEY:
+      if ((currentMC + 1) % 10 == 0)
+        {
+          currentMC = currentMC - 9;
+        }
+      else if (currentMC == 127)
+        {
+          currentMC = currentMC - 7;
+        }
+      else
+        {
+          currentMC = currentMC + 1;
+        }
+      break;
+
+    case L_KEY:
+      mt_gotoXY (26, 1);
+      mt_printText ("Введите имя файла для загрузки: ");
+      rk_mytermregime (1, 0, 0, 1, 1);
+      char bufLoad;
+      scanf ("%s", &bufLoad);
+      sc_memoryLoad (&bufLoad);
+      mt_gotoXY (26, 1);
+      mt_delline ();
+      break;
+
+    case S_KEY:
+      mt_gotoXY (26, 1);
+      mt_printText ("Введите имя файла для сохранения: ");
+      rk_mytermregime (1, 0, 0, 1, 1);
+      char bufSave;
+      scanf ("%s", &bufSave);
+      sc_memorySave (&bufSave);
+      mt_gotoXY (26, 1);
+      mt_delline ();
+      break;
+
+    case I_KEY:
+      sc_memoryInit ();
+      sc_accumulatorInit ();
+      sc_icounterInit ();
+      sc_regSet (OVERFLOW, 0);
+      sc_regSet (NULL_DEL, 0);
+      sc_regSet (OUT_OF_MEMORY, 0);
+      sc_regSet (WRONG_COMMAND, 0);
+      sc_regSet (IMPULS, 1);
+      break;
+
+    case R_KEY:
+      break;
+
+    case T_KEY:
+      break;
+
+    case F5_KEY:
+      mt_gotoXY (2, 68);
+      int value_acum;
+      if (rk_readvalue (&value_acum, 0) == -1)
+        {
+          break;
+        }
+      sc_accumulatorSet (value_acum);
+      break;
+
+    case F6_KEY:
+      mt_gotoXY (5, 78);
+      rk_mytermregime (0, 0, 4, 1, 1);
+      int icounter_read = icounter;
+      char buf[5];
+      int terminal = open (TERM, O_RDWR);
+      if (terminal == -1)
+        {
+          return -1;
+        }
+      int numRead = read (terminal, buf, sizeof (buf));
+      buf[numRead] = '\0';
+      sscanf (buf, "%X", &icounter_read);
+      if (icounter_read < 0 || icounter_read > 127)
+        {
+          sc_regSet (OUT_OF_MEMORY, 1);
+          icounter = icounter_read;
+        }
+      else
+        {
+          sc_regSet (OUT_OF_MEMORY, 0);
+          icounter = icounter_read;
+        }
+      break;
+
+    case ENTER_KEY:
+      mt_gotoXY (cursorX, cursorY);
+      int value;
+      if (rk_readvalue (&value, 0) == -1)
+        {
+          break;
+        }
+      sc_memorySet (currentMC, value);
+      break;
+
+    case ESC_KEY:
+      rk_mytermregime (0, 0, 1, 1, 1);
+      break;
+
+    default:
+      break;
+    }
 
   return 0;
 }

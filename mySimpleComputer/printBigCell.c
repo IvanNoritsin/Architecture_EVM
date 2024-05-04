@@ -4,12 +4,10 @@ void
 printBigCell (int font_array[][2])
 {
 
-  int icounter_get;
   int memory_get;
   int sign, command, operand;
 
-  sc_icounterGet (&icounter_get);
-  sc_memoryGet (icounter_get, &memory_get);
+  sc_memoryGet (currentMC, &memory_get);
   sc_commandDecode (memory_get, &sign, &command, &operand);
 
   if (sign == 0)

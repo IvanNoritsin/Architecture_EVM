@@ -25,6 +25,8 @@ printCell (int address, enum colors fg, enum colors bg)
           mt_printText (buf);
           mt_setdefaultcolor ();
           mt_printText (space);
+          cursorX = _x;
+          cursorY = _y;
         }
       else
         {
@@ -37,6 +39,8 @@ printCell (int address, enum colors fg, enum colors bg)
           mt_printText (buf);
           mt_setdefaultcolor ();
           mt_printText (space);
+          cursorX = _x;
+          cursorY = _y;
         }
     }
   else

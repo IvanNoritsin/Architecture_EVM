@@ -25,7 +25,7 @@ printTerm (int address, int input)
         }
     }
 
-  mt_gotoXY (24, 68);
+  mt_gotoXY (25, 67);
   mt_printText (buf);
   mt_gotoXY (20, 68);
   mt_delline ();
