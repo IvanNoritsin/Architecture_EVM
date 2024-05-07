@@ -9,7 +9,7 @@ printTerm (int address, int input)
 
   if (input == 0)
     {
-      sprintf (buf, "%d<", address);
+      sprintf (buf, "%02X<      ", address);
     }
   if (input == 1)
     {
@@ -17,11 +17,11 @@ printTerm (int address, int input)
       sc_commandDecode (memory_get, &sign, &command, &operand);
       if (sign == 0)
         {
-          sprintf (buf, "%02d> +%02X%02X", address, command, operand);
+          sprintf (buf, "%02X> +%02X%02X", address, command, operand);
         }
       else
         {
-          sprintf (buf, "%02d> -%02X%02X", address, command, operand);
+          sprintf (buf, "%02X> -%02X%02X", address, command, operand);
         }
     }
 

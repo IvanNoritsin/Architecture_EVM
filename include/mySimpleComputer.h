@@ -2,6 +2,8 @@
 #define MY_SIMPLE_COMPUTER_H
 
 #include "myBigChars.h"
+#include "myReadKey.h"
+#include "mySignal.h"
 #include "myTerm.h"
 #include <stdio.h>
 
@@ -18,7 +20,9 @@ extern int accumulator;
 extern int icounter;
 extern int cursorX;
 extern int cursorY;
+extern int font_array[18][2];
 
+void printTerm (int address, int input);
 int sc_memoryInit ();
 int sc_memorySet (int address, int value);
 int sc_memoryGet (int address, int *value);
@@ -42,7 +46,6 @@ void printDecodedCommand (int value);
 void printAccumulator ();
 void printCounters ();
 void printCommand ();
-void printTerm (int address, int input);
 void printBigCell (int font_array[][2]);
 
 #endif

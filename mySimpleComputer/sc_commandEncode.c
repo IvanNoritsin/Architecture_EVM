@@ -8,12 +8,6 @@ sc_commandEncode (int sign, int command, int operand, int *value)
       return -1;
     }
 
-  if (sc_commandValidate (command) == 1)
-    {
-      sc_regSet (WRONG_COMMAND, 1);
-      return -1;
-    }
-
   if (operand < 0 || operand > 127)
     {
       sc_regSet (OUT_OF_MEMORY, 1);

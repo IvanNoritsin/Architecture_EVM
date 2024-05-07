@@ -8,3 +8,4 @@ int icounter;
 int cursorX;
 int cursorY;
 int currentAddress;
+int font_array[18][2];

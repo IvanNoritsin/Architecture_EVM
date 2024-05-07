@@ -6,6 +6,9 @@ printDecodedCommand (int value)
   char buf[70];
   char buf_bin[50];
   int index = 0;
+  int sign, command, operand;
+
+  sc_commandDecode (value, &sign, &command, &operand);
 
   if (value == 0)
     {
@@ -14,8 +17,16 @@ printDecodedCommand (int value)
     }
   else
     {
-      sprintf (buf, "dec: %05d | oct: %05o | hex: %04X    ", value, value,
-               value);
+      if (sign == 0)
+        {
+          sprintf (buf, "dec: %05d | oct: %05o | hex: %04X    ",
+                   value & 0x3FFF, value & 0x3FFF, value & 0x3FFF);
+        }
+      else
+        {
+          sprintf (buf, "dec:-%05d | oct:-%05o | hex:-%04X    ",
+                   value & 0x3FFF, value & 0x3FFF, value & 0x3FFF);
+        }
 
       for (int i = 14; i >= 0; i--)
         {

@@ -13,11 +13,13 @@ printAccumulator (void)
 
   if (sign == 0)
     {
-      sprintf (buf, "sc: +%02X%02X hex: %04X", command, operand, value);
+      sprintf (buf, "sc: +%02X%02X hex: %04X", command, operand,
+               value & 0x3FFF);
     }
   else
     {
-      sprintf (buf, "sc: -%02X%02X hex: %04X", command, operand, value);
+      sprintf (buf, "sc: -%02X%02X hex:-%04X", command, operand,
+               value & 0x3FFF);
     }
 
   mt_gotoXY (2, 64);

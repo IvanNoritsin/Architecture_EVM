@@ -1,5 +1,7 @@
 #include "myBigChars.h"
+#include "myInterface.h"
 #include "myReadKey.h"
+#include "mySignal.h"
 #include "mySimpleComputer.h"
 #include "myTerm.h"
 
@@ -52,7 +54,6 @@ main (int argc, char *argv[])
       return -1;
     }
 
-  int font_array[18][2];
   int count;
 
   bc_bigcharread (fd, font_array, 18, &count);
@@ -63,7 +64,6 @@ main (int argc, char *argv[])
   sc_accumulatorInit ();
   sc_icounterInit ();
   sc_regInit ();
-
   sc_regSet (IMPULS, 1);
   rk_mytermregime (0, 0, 1, 1, 1);
 
@@ -119,13 +119,13 @@ interface (int font_array[][2])
   mt_gotoXY (20, 78);
   mt_printText ("l - load  s - save  i - reset");
   mt_gotoXY (21, 78);
-  mt_printText ("r - run   t - step");
+  mt_printText ("r - run   t - step           ");
   mt_gotoXY (22, 78);
-  mt_printText ("ESC - выход");
+  mt_printText ("ESC - выход                  ");
   mt_gotoXY (23, 78);
-  mt_printText ("F5 - accumulator");
+  mt_printText ("F5 - accumulator             ");
   mt_gotoXY (24, 78);
-  mt_printText ("F6 - instruction counter");
+  mt_printText ("F6 - instruction counter     ");
 
   mt_gotoXY (27, 1);
 }
@@ -133,154 +133,174 @@ interface (int font_array[][2])
 int
 keyHandler (enum keys key)
 {
+  int impulsValue;
+  sc_regGet (IMPULS, &impulsValue);
+  if (impulsValue == 1)
+    {
+      switch (key)
+        {
+        case UP_KEY:
+          if (currentMC <= 7)
+            {
+              currentMC = 120 + currentMC;
+            }
+          else if (currentMC == 8 || currentMC == 9)
+            {
+              currentMC = 110 + currentMC;
+            }
+          else
+            {
+              currentMC = currentMC - 10;
+            }
+          break;
+
+        case DOWN_KEY:
+          if (currentMC >= 120)
+            {
+              currentMC = currentMC - 120;
+            }
+          else if (currentMC == 118 || currentMC == 119)
+            {
+              currentMC = currentMC - 110;
+            }
+          else
+            {
+              currentMC = currentMC + 10;
+            }
+          break;
+
+        case LEFT_KEY:
+          if (currentMC % 10 == 0 && currentMC != 120)
+            {
+              currentMC = currentMC + 9;
+            }
+          else if (currentMC == 120)
+            {
+              currentMC = currentMC + 7;
+            }
+          else
+            {
+              currentMC = currentMC - 1;
+            }
+          break;
+
+        case RIGHT_KEY:
+          if ((currentMC + 1) % 10 == 0)
+            {
+              currentMC = currentMC - 9;
+            }
+          else if (currentMC == 127)
+            {
+              currentMC = currentMC - 7;
+            }
+          else
+            {
+              currentMC = currentMC + 1;
+            }
+          break;
+
+        case L_KEY:
+          mt_gotoXY (26, 1);
+          mt_printText ("Введите имя файла для загрузки: ");
+          rk_mytermregime (1, 0, 0, 1, 1);
+          char bufLoad;
+          scanf ("%s", &bufLoad);
+          sc_memoryLoad (&bufLoad);
+          mt_gotoXY (26, 1);
+          mt_delline ();
+          break;
+
+        case S_KEY:
+          mt_gotoXY (26, 1);
+          mt_printText ("Введите имя файла для сохранения: ");
+          rk_mytermregime (1, 0, 0, 1, 1);
+          char bufSave;
+          scanf ("%s", &bufSave);
+          sc_memorySave (&bufSave);
+          mt_gotoXY (26, 1);
+          mt_delline ();
+          break;
+
+        case F5_KEY:
+          mt_gotoXY (2, 68);
+          int value_acum;
+          if (rk_readvalue (&value_acum, 0) == -1)
+            {
+              break;
+            }
+          sc_accumulatorSet (value_acum);
+          break;
+
+        case F6_KEY:
+          mt_gotoXY (5, 78);
+          rk_mytermregime (0, 0, 4, 1, 1);
+          int icounter_read = icounter;
+          char buf[5];
+          int terminal = open (TERM, O_RDWR);
+          if (terminal == -1)
+            {
+              return -1;
+            }
+          int numRead = read (terminal, buf, sizeof (buf));
+          buf[numRead] = '\0';
+          sscanf (buf, "%X", &icounter_read);
+          if (icounter_read < 0 || icounter_read > 127)
+            {
+              sc_regSet (OUT_OF_MEMORY, 1);
+              icounter = icounter_read;
+            }
+          else
+            {
+              sc_regSet (OUT_OF_MEMORY, 0);
+              icounter = icounter_read;
+            }
+          break;
+
+        case ENTER_KEY:
+          mt_gotoXY (cursorX, cursorY);
+          int value;
+          if (rk_readvalue (&value, 0) == -1)
+            {
+              break;
+            }
+          sc_memorySet (currentMC, value);
+          break;
+
+        case ESC_KEY:
+          rk_mytermregime (0, 0, 1, 1, 1);
+          break;
+
+        default:
+          break;
+        }
+    }
+
   switch (key)
     {
-    case UP_KEY:
-      if (currentMC <= 7)
-        {
-          currentMC = 120 + currentMC;
-        }
-      else if (currentMC == 8 || currentMC == 9)
-        {
-          currentMC = 110 + currentMC;
-        }
-      else
-        {
-          currentMC = currentMC - 10;
-        }
-      break;
-
-    case DOWN_KEY:
-      if (currentMC >= 120)
-        {
-          currentMC = currentMC - 120;
-        }
-      else if (currentMC == 118 || currentMC == 119)
-        {
-          currentMC = currentMC - 110;
-        }
-      else
-        {
-          currentMC = currentMC + 10;
-        }
-      break;
-
-    case LEFT_KEY:
-      if (currentMC % 10 == 0 && currentMC != 120)
-        {
-          currentMC = currentMC + 9;
-        }
-      else if (currentMC == 120)
-        {
-          currentMC = currentMC + 7;
-        }
-      else
-        {
-          currentMC = currentMC - 1;
-        }
-      break;
-
-    case RIGHT_KEY:
-      if ((currentMC + 1) % 10 == 0)
-        {
-          currentMC = currentMC - 9;
-        }
-      else if (currentMC == 127)
-        {
-          currentMC = currentMC - 7;
-        }
-      else
-        {
-          currentMC = currentMC + 1;
-        }
-      break;
-
-    case L_KEY:
-      mt_gotoXY (26, 1);
-      mt_printText ("Введите имя файла для загрузки: ");
-      rk_mytermregime (1, 0, 0, 1, 1);
-      char bufLoad;
-      scanf ("%s", &bufLoad);
-      sc_memoryLoad (&bufLoad);
-      mt_gotoXY (26, 1);
-      mt_delline ();
-      break;
-
-    case S_KEY:
-      mt_gotoXY (26, 1);
-      mt_printText ("Введите имя файла для сохранения: ");
-      rk_mytermregime (1, 0, 0, 1, 1);
-      char bufSave;
-      scanf ("%s", &bufSave);
-      sc_memorySave (&bufSave);
-      mt_gotoXY (26, 1);
-      mt_delline ();
-      break;
-
     case I_KEY:
-      sc_memoryInit ();
-      sc_accumulatorInit ();
-      sc_icounterInit ();
-      sc_regSet (OVERFLOW, 0);
-      sc_regSet (NULL_DEL, 0);
-      sc_regSet (OUT_OF_MEMORY, 0);
-      sc_regSet (WRONG_COMMAND, 0);
-      sc_regSet (IMPULS, 1);
+      IRC (SIGUSR1);
+      currentMC = 0;
       break;
 
     case R_KEY:
-      break;
-
-    case T_KEY:
-      break;
-
-    case F5_KEY:
-      mt_gotoXY (2, 68);
-      int value_acum;
-      if (rk_readvalue (&value_acum, 0) == -1)
+      int ignoreImpuls;
+      sc_regGet (IMPULS, &ignoreImpuls);
+      if (ignoreImpuls == 1)
         {
-          break;
-        }
-      sc_accumulatorSet (value_acum);
-      break;
-
-    case F6_KEY:
-      mt_gotoXY (5, 78);
-      rk_mytermregime (0, 0, 4, 1, 1);
-      int icounter_read = icounter;
-      char buf[5];
-      int terminal = open (TERM, O_RDWR);
-      if (terminal == -1)
-        {
-          return -1;
-        }
-      int numRead = read (terminal, buf, sizeof (buf));
-      buf[numRead] = '\0';
-      sscanf (buf, "%X", &icounter_read);
-      if (icounter_read < 0 || icounter_read > 127)
-        {
-          sc_regSet (OUT_OF_MEMORY, 1);
-          icounter = icounter_read;
+          sc_regSet (IMPULS, 0);
+          signals ();
+          IRC (SIGALRM);
         }
       else
         {
-          sc_regSet (OUT_OF_MEMORY, 0);
-          icounter = icounter_read;
+          sc_regSet (IMPULS, 1);
+          alarm (0);
         }
       break;
 
-    case ENTER_KEY:
-      mt_gotoXY (cursorX, cursorY);
-      int value;
-      if (rk_readvalue (&value, 0) == -1)
-        {
-          break;
-        }
-      sc_memorySet (currentMC, value);
-      break;
-
-    case ESC_KEY:
-      rk_mytermregime (0, 0, 1, 1, 1);
+    case T_KEY:
+      IRC (SIGALRM);
+      sc_icounterGet (&currentMC);
       break;
 
     default:
