@@ -134,6 +134,7 @@ int
 keyHandler (enum keys key)
 {
   int impulsValue;
+  int ignoreImpuls;
   sc_regGet (IMPULS, &impulsValue);
   if (impulsValue == 1)
     {
@@ -283,7 +284,6 @@ keyHandler (enum keys key)
       break;
 
     case R_KEY:
-      int ignoreImpuls;
       sc_regGet (IMPULS, &ignoreImpuls);
       if (ignoreImpuls == 1)
         {
