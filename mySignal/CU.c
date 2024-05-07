@@ -5,6 +5,8 @@ CU (void)
 {
   int value = 0;
   int sign, command, operand;
+  int memory_get;
+  int acc_sign, acc_command, acc_operand;
 
   sc_memoryGet (icounter, &value);
   if (sc_commandDecode (value, &sign, &command, &operand) != 0)
@@ -31,7 +33,6 @@ CU (void)
       switch (command)
         {
         case 0x14:
-          int memory_get;
           sc_memoryGet (operand, &memory_get);
           sc_accumulatorSet (memory_get);
           printf ("%d", memory_get);
@@ -46,7 +47,6 @@ CU (void)
           break;
 
         case 0x29:
-          int acc_sign, acc_command, acc_operand;
           sc_commandDecode (accumulator, &acc_sign, &acc_command,
                             &acc_operand);
           if (acc_sign == 1)
