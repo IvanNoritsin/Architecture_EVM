@@ -1,6 +1,7 @@
 #ifndef MY_SIGNAL_H
 #define MY_SIGNAL_H
 
+#include "myController.h"
 #include "myReadKey.h"
 #include "mySimpleComputer.h"
 #include "myTerm.h"

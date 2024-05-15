@@ -19,6 +19,13 @@ signals (void)
 void
 IRC (int signum)
 {
+  if (tcounter != 0)
+    {
+      tcounter--;
+      interface (font_array);
+      return;
+    }
+
   if (signum == SIGALRM)
     {
       CU ();
@@ -47,6 +54,7 @@ IRC (int signum)
       sc_memoryInit ();
       accumulator = 0;
       icounter = 0;
+      tcounter = 0;
       sc_regSet (OVERFLOW, 0);
       sc_regSet (NULL_DEL, 0);
       sc_regSet (OUT_OF_MEMORY, 0);

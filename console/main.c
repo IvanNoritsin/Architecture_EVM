@@ -64,6 +64,7 @@ main (int argc, char *argv[])
   sc_accumulatorInit ();
   sc_icounterInit ();
   sc_regInit ();
+  mc_cacheInit ();
   sc_regSet (IMPULS, 1);
   rk_mytermregime (0, 0, 1, 1, 1);
 
@@ -114,6 +115,9 @@ interface (int font_array[][2])
   printBigCell (font_array);
 
   bc_box (19, 66, 5, 9, WHITE, BLACK, " IN--OUT ", GREEN, WHITE);
+
+  bc_box (19, 1, 5, 63, WHITE, BLACK, " Кэш процессора ", GREEN, WHITE);
+  printCache ();
 
   bc_box (19, 77, 5, 29, WHITE, BLACK, " Клавиши ", GREEN, WHITE);
   mt_gotoXY (20, 78);
@@ -233,7 +237,7 @@ keyHandler (enum keys key)
           break;
 
         case F6_KEY:
-          mt_gotoXY (5, 78);
+          mt_gotoXY (5, 79);
           rk_mytermregime (0, 0, 4, 1, 1);
           int icounter_read = icounter;
           char buf[5];

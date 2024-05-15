@@ -9,7 +9,7 @@ ALU (int command, int operand)
   int accumulatorValue, memoryValue;
   int result, newAcc_sign, newAcc_command, newAcc_operand, newAcc_value,
       newAccumulator;
-  sc_memoryGet (operand, &memory_get);
+  mc_controllerread (operand, &memory_get);
 
   switch (command)
     {

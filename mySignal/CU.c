@@ -8,7 +8,7 @@ CU (void)
   int memory_get;
   int acc_sign, acc_command, acc_operand;
 
-  sc_memoryGet (icounter, &value);
+  mc_controllerread (icounter, &value);
   if (sc_commandDecode (value, &sign, &command, &operand) != 0)
     {
       sc_regSet (WRONG_COMMAND, 1);
@@ -33,13 +33,12 @@ CU (void)
       switch (command)
         {
         case 0x14:
-          sc_memoryGet (operand, &memory_get);
+          mc_controllerread (operand, &memory_get);
           sc_accumulatorSet (memory_get);
-          printf ("%d", memory_get);
           break;
 
         case 0x15:
-          sc_memorySet (operand, accumulator);
+          mc_controllerwrite (operand, accumulator);
           break;
 
         case 0x28:

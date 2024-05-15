@@ -2,6 +2,7 @@
 #define MY_SIMPLE_COMPUTER_H
 
 #include "myBigChars.h"
+#include "myController.h"
 #include "myReadKey.h"
 #include "mySignal.h"
 #include "myTerm.h"
@@ -21,6 +22,7 @@ extern int icounter;
 extern int cursorX;
 extern int cursorY;
 extern int font_array[18][2];
+extern int tcounter;
 
 void printTerm (int address, int input);
 int sc_memoryInit ();
@@ -40,12 +42,15 @@ int sc_icounterGet (int *value);
 int sc_commandEncode (int sign, int command, int operand, int *value);
 int sc_commandDecode (int value, int *sign, int *command, int *operand);
 int sc_commandValidate (int command);
+int sc_tcounterInit ();
+int sc_tcounterSet (int value);
 void printCell (int address, enum colors fg, enum colors bg);
 void printFlags ();
 void printDecodedCommand (int value);
 void printAccumulator ();
 void printCounters ();
 void printCommand ();
+void printCache ();
 void printBigCell (int font_array[][2]);
 
 #endif
