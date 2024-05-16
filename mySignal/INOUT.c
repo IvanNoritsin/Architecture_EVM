@@ -23,6 +23,7 @@ INOUT (int command, int operand)
         {
           break;
         }
+
       sc_memorySet (operand, value);
       break;
 
