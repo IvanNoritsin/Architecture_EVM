@@ -3,17 +3,23 @@
 void
 printCache (void)
 {
-  char buf[50];
+  char buf[150];
   int cacheDataLine, cache_sign, cache_command, cache_operand;
   for (int i = 0; i < CACHE_SIZE; i++)
     {
       if (cache[i].numberLine == 0)
         {
-          sprintf (buf, " %d:", cache[i].numberLine);
+          sprintf (buf,
+                   " %d:                                                      "
+                   "     ",
+                   cache[i].numberLine);
         }
       else
         {
-          sprintf (buf, "%d:", cache[i].numberLine);
+          sprintf (buf,
+                   "%d:                                                       "
+                   "     ",
+                   cache[i].numberLine);
         }
       mt_gotoXY (20 + i, 2);
       mt_printText (buf);

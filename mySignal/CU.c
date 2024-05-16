@@ -9,6 +9,7 @@ CU (void)
   int acc_sign, acc_command, acc_operand;
 
   mc_controllerread (icounter, &value);
+
   if (sc_commandDecode (value, &sign, &command, &operand) != 0)
     {
       sc_regSet (WRONG_COMMAND, 1);

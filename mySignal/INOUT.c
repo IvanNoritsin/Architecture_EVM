@@ -19,7 +19,10 @@ INOUT (int command, int operand)
       interface (font_array);
       mt_gotoXY (24, 71);
       int value;
-      rk_readvalue (&value, 0);
+      if (rk_readvalue (&value, 0) == -1)
+        {
+          break;
+        }
       sc_memorySet (operand, value);
       break;
 

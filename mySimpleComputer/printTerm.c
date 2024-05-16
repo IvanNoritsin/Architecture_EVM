@@ -1,3 +1,4 @@
+#include "myInterface.h"
 #include "mySimpleComputer.h"
 
 void
